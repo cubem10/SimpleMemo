@@ -12,6 +12,10 @@ async function register() {
 
 async function change_login_message() {
     const token = localStorage.getItem("token");
+    if (!token) {
+        document.getElementById("login_text").innerHTML = "Login / Register";
+        return;
+    }
     const result = await fetch("/user", {
         method: "GET", 
         headers: {"Content-Type": "application/json",
@@ -19,12 +23,7 @@ async function change_login_message() {
         }
     })
     const data = await result.json();
-    if (token) {
-        document.getElementById("login_text").innerHTML = "Hello " + data.username;
-    }
-    else {
-        document.getElementById("login_text").innerHTML = "Login / Register";
-    }
+    document.getElementById("login_text").innerHTML = "Hello " + data.username;
 }
 
 async function login() {
@@ -40,6 +39,12 @@ async function login() {
     localStorage.setItem("token", data.token);
     change_login_message();
     loadMemos();
+}
+
+async function logout() {
+    localStorage.setItem("token", "");
+    change_login_message();
+    document.getElementById("memos").innerHTML = "";
 }
 
 async function saveMemo() {
@@ -84,7 +89,7 @@ window.onload = function() {
     if (token) loadMemos();
 }
 
-const inputField = document.getElementById("memo");
+const inputField = document.getElementById("memos");
 const charCountDisplay = document.getElementById("charCount");
 const maxLength = inputField.maxLength;
 
