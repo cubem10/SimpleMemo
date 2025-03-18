@@ -3,6 +3,10 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 import datetime
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -11,7 +15,7 @@ bcrypt = Bcrypt()
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
-app.config["JWT_SECRET_KEY"] = "GoN_MeMo"
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 app.config["JWT_VERIFY_SUB"] = False
 
 class User(db.Model): 
